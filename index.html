@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07090d" />
+  <meta name="description" content="Analyst Viraj — Premium Football & Cricket Analysis Community" />
+
+  <title>Analyst Viraj | Sports Intelligence</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #07090d;
+      --bg-2: #0b0f16;
+      --panel: rgba(17, 22, 31, 0.72);
+      --panel-solid: #10151e;
+      --text: #f2f5f7;
+      --muted: #9099a7;
+      --line: rgba(255,255,255,.09);
+      --accent: #8ce5d0;
+      --accent-strong: #49bfa7;
+      --silver: #d9e1e7;
+      --blue: #789ee8;
+      --glow: rgba(91, 211, 185, .22);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(69, 125, 151, .18), transparent 34%),
+        radial-gradient(circle at 0% 65%, rgba(46, 91, 103, .13), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      font-family: "Manrope", sans-serif;
+    }
+
+    /* ===== BACKGROUND INTELLIGENCE GRID ===== */
+    .grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .38;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 38px 38px;
+      mask-image: linear-gradient(to bottom, black, transparent 88%);
+      animation: gridMove 18s linear infinite;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      opacity: .15;
+    }
+
+    .orb.one {
+      width: 220px;
+      height: 220px;
+      background: var(--accent);
+      top: 10%;
+      left: -100px;
+    }
+
+    .orb.two {
+      width: 180px;
+      height: 180px;
+      background: var(--blue);
+      right: -100px;
+      bottom: 10%;
+    }
+
+    .scanline {
+      position: fixed;
+      top: -20%;
+      left: 0;
+      width: 100%;
+      height: 35%;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(140,229,208,.025),
+        transparent
+      );
+      animation: scan 8s linear infinite;
+    }
+
+    /* ===== MAIN ===== */
+    .app {
+      width: min(100%, 560px);
+      min-height: 100svh;
+      margin: 0 auto;
+      position: relative;
+      padding:
+        max(18px, env(safe-area-inset-top))
+        18px
+        max(14px, env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      isolation: isolate;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      animation: reveal .7s ease both;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--silver);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 0 rgba(140,229,208,.55);
+      animation: pulse 2s infinite;
+    }
+
+    .session {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.025);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--muted);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      letter-spacing: .04em;
+      backdrop-filter: blur(10px);
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      text-align: center;
+      padding: clamp(18px, 4vh, 34px) 0 10px;
+      position: relative;
+    }
+
+    .logo-shell {
+      width: clamp(88px, 25vw, 118px);
+      aspect-ratio: 1;
+      margin: 0 auto 18px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      animation: logoEntrance 1s cubic-bezier(.16,1,.3,1) both;
+    }
+
+    .logo-shell::before {
+      content: "";
+      position: absolute;
+      inset: -11px;
+      border-radius: 50%;
+      border: 1px solid rgba(140,229,208,.14);
+      box-shadow:
+        0 0 0 8px rgba(140,229,208,.025),
+        0 0 45px var(--glow);
+      animation: ringSpin 14s linear infinite;
+    }
+
+    .logo-shell::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      border-top: 1px solid rgba(140,229,208,.55);
+      border-right: 1px solid transparent;
+      animation: ringSpin 5s linear infinite reverse;
+    }
+
+    .logo-frame {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      overflow: hidden;
+      background: #10151c;
+      border: 1px solid rgba(255,255,255,.13);
+      box-shadow:
+        inset 0 0 25px rgba(255,255,255,.03),
+        0 20px 45px rgba(0,0,0,.45);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .logo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-sweep {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .logo-sweep::after {
+      content: "";
+      position: absolute;
+      width: 35%;
+      height: 150%;
+      top: -25%;
+      left: -60%;
+      transform: rotate(25deg);
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.26),
+        transparent
+      );
+      animation: sweep 4.8s ease-in-out infinite 1.5s;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-family: "DM Mono", monospace;
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      animation: reveal .8s ease .18s both;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(32px, 9.5vw, 52px);
+      line-height: .95;
+      letter-spacing: -.055em;
+      font-weight: 700;
+      animation: reveal .8s ease .27s both;
+    }
+
+    h1 .dim {
+      color: #8d98a5;
+      font-weight: 500;
+    }
+
+    .subtext {
+      max-width: 430px;
+      margin: 14px auto 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      animation: reveal .8s ease .38s both;
+    }
+
+    /* ===== ANALYST TERMINAL ===== */
+    .terminal {
+      margin-top: clamp(18px, 3vh, 26px);
+      border: 1px solid rgba(255,255,255,.1);
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+        var(--panel);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow:
+        0 25px 60px rgba(0,0,0,.28),
+        inset 0 1px rgba(255,255,255,.04);
+      backdrop-filter: blur(18px);
+      animation: reveal .85s ease .5s both;
+      position: relative;
+    }
+
+    .terminal::before {
+      content: "";
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      top: -100px;
+      right: -60px;
+      background: radial-gradient(circle, rgba(140,229,208,.1), transparent 68%);
+      pointer-events: none;
+    }
+
+    .terminal-head {
+      min-height: 42px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0,0,0,.1);
+    }
+
+    .terminal-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      color: #b6c0ca;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .terminal-bars {
+      display: flex;
+      gap: 3px;
+      align-items: end;
+    }
+
+    .terminal-bars i {
+      display: block;
+      width: 3px;
+      border-radius: 2px;
+      background: var(--accent);
+      animation: signal 1.3s ease-in-out infinite alternate;
+    }
+
+    .terminal-bars i:nth-child(1) { height: 5px; animation-delay: -.6s; }
+    .terminal-bars i:nth-child(2) { height: 9px; animation-delay: -.3s; }
+    .terminal-bars i:nth-child(3) { height: 13px; }
+
+    .terminal-time {
+      font-family: "DM Mono", monospace;
+      color: #72808d;
+      font-size: 10px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 15px 8px 13px;
+    }
+
+    .metric {
+      min-width: 0;
+      text-align: center;
+      padding: 2px 7px;
+      position: relative;
+    }
+
+    .metric:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 10%;
+      right: 0;
+      width: 1px;
+      height: 80%;
+      background: var(--line);
+    }
+
+    .metric-ring {
+      width: 42px;
+      height: 42px;
+      margin: 0 auto 6px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      background: conic-gradient(var(--ring-color, var(--accent)) var(--value), rgba(255,255,255,.07) 0);
+    }
+
+    .metric-ring::before {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: inherit;
+      background: var(--panel-solid);
+    }
+
+    .metric-ring span {
+      position: relative;
+      z-index: 1;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .metric-value {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: clamp(16px, 5vw, 21px);
+      line-height: 1;
+      letter-spacing: -.04em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .metric-name {
+      margin-top: 5px;
+      color: #7e8995;
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .data-strip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 34px;
+      padding: 0 13px;
+      border-top: 1px solid var(--line);
+      color: #7e8995;
+      overflow: hidden;
+      font-family: "DM Mono", monospace;
+      font-size: 9px;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+
+    .ticker-dot {
+      width: 5px;
+      height: 5px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .ticker {
+      display: inline-block;
+      animation: ticker 14s linear infinite;
+      color: #aeb8c1;
+    }
+
+    /* ===== CTA GATEWAY ===== */
+    .cta-wrap {
+      margin-top: auto;
+      padding-top: clamp(18px, 3vh, 28px);
+      animation: reveal .85s ease .64s both;
+    }
+
+    .access-gate {
+      display: block;
+      position: relative;
+      text-decoration: none;
+      color: #07100f;
+      border-radius: 20px;
+      padding: 1px;
+      background: linear-gradient(
+        110deg,
+        rgba(255,255,255,.72),
+        var(--accent),
+        #5fa8bb,
+        var(--accent)
+      );
+      box-shadow:
+        0 14px 40px rgba(73,191,167,.16),
+        0 8px 20px rgba(0,0,0,.25);
+      overflow: hidden;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .access-gate::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255,255,255,.55) 48%,
+        transparent 65%
+      );
+      transform: translateX(-120%);
+      animation: ctaSweep 3.8s ease-in-out infinite;
+    }
+
+    .access-inner {
+      min-height: 68px;
+      border-radius: 19px;
+      background:
+        linear-gradient(135deg, rgba(236,255,251,.98), rgba(155,232,215,.98));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px 10px 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .access-inner::after {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      right: -65px;
+      top: -32px;
+      border-radius: 50%;
+      border: 1px solid rgba(7,16,15,.12);
+      box-shadow:
+        0 0 0 14px rgba(7,16,15,.035),
+        0 0 0 28px rgba(7,16,15,.025);
+    }
+
+    .cta-copy {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-small {
+      display: block;
+      margin-bottom: 3px;
+      font-family: "DM Mono", monospace;
+      font-size: 8px;
+      letter-spacing: .13em;
+      opacity: .62;
+      text-transform: uppercase;
+    }
+
+    .cta-main {
+      display: block;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .cta-icon {
+      position: relative;
+      z-index: 1;
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: var(--text);
+      background: #101a1a;
+      box-shadow: 0 8px 18px rgba(0,0,0,.16);
+      transition: transform .25s ease;
+    }
+
+    .cta-icon svg {
+      width: 20px;
+      height: 20px;
+      transition: transform .25s ease;
+    }
+
+    .access-gate:active {
+      transform: scale(.975);
+      box-shadow: 0 6px 18px rgba(73,191,167,.12);
+    }
+
+    .access-gate:active .cta-icon svg {
+      transform: translateX(3px);
+    }
+
+    .footer {
+      text-align: center;
+      padding-top: 13px;
+      color: #66717d;
+      font-size: 9px;
+      letter-spacing: .04em;
+      animation: reveal .8s ease .78s both;
+    }
+
+    .footer span {
+      color: #8995a1;
+    }
+
+    /* ===== DESKTOP ===== */
+    @media (min-width: 700px) {
+      .app {
+        padding-left: 24px;
+        padding-right: 24px;
+      }
+
+      .hero {
+        padding-top: 34px;
+      }
+
+      .terminal {
+        margin-top: 28px;
+      }
+    }
+
+    @media (hover: hover) {
+      .access-gate:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 18px 48px rgba(73,191,167,.22),
+          0 12px 25px rgba(0,0,0,.22);
+      }
+
+      .access-gate:hover .cta-icon {
+        transform: rotate(-5deg) scale(1.04);
+      }
+    }
+
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+        filter: blur(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes logoEntrance {
+      from {
+        opacity: 0;
+        transform: scale(.65) rotate(-10deg);
+        filter: blur(8px);
+      }
+      70% {
+        opacity: 1;
+        transform: scale(1.04) rotate(1deg);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1) rotate(0);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes ringSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes sweep {
+      0%, 55% { left: -70%; }
+      80%, 100% { left: 140%; }
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(140,229,208,.48); }
+      70% { box-shadow: 0 0 0 7px rgba(140,229,208,0); }
+      100% { box-shadow: 0 0 0 0 rgba(140,229,208,0); }
+    }
+
+    @keyframes signal {
+      from { opacity: .35; transform: scaleY(.65); }
+      to { opacity: 1; transform: scaleY(1); }
+    }
+
+    @keyframes gridMove {
+      from { background-position: 0 0; }
+      to { background-position: 38px 38px; }
+    }
+
+    @keyframes scan {
+      from { transform: translateY(-20vh); }
+      to { transform: translateY(140vh); }
+    }
+
+    @keyframes ticker {
+      0%, 15% { transform: translateX(0); }
+      85%, 100% { transform: translateX(-32%); }
+    }
+
+    @keyframes ctaSweep {
+      0%, 40% { transform: translateX(-120%); }
+      65%, 100% { transform: translateX(120%); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grid"></div>
+  <div class="orb one"></div>
+  <div class="orb two"></div>
+  <div class="scanline"></div>
+
+  <main class="app">
+
+    <div class="topbar">
+      <div class="status">
+        <span class="status-dot"></span>
+        LIVE ANALYSIS DESK
+      </div>
+
+      <div class="session" id="sessionTime">--:--</div>
+    </div>
+
+    <section class="hero">
+      <div class="logo-shell">
+        <div class="logo-frame">
+          <img src="logo.png" alt="Analyst Viraj Logo">
+          <div class="logo-sweep"></div>
+        </div>
+      </div>
+
+      <p class="eyebrow">Football + Cricket Intelligence</p>
+
+      <h1>
+        ANALYST<br>
+        <span class="dim">VIRAJ</span>
+      </h1>
+
+      <p class="subtext">
+        A premium community built around match intelligence,
+        sports analysis and sharper insights.
+      </p>
+    </section>
+
+    <section class="terminal" aria-label="Community highlights">
+      <div class="terminal-head">
+        <div class="terminal-label">
+          <div class="terminal-bars">
+            <i></i><i></i><i></i>
+          </div>
+          Intelligence Monitor
+        </div>
+
+        <div class="terminal-time" id="liveClock">SYNCING</div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <div class="metric-ring" style="--value: 95%; --ring-color: #8ce5d0;">
+            <span>95</span>
+          </div>
+          <div class="metric-value" data-target="95">95%</div>
+          <div class="metric-name">Accuracy</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-ring" style="--value: 78%; --ring-color: #789ee8;">
+            <span>35K</span>
+          </div>
+          <div class="metric-value">35K+</div>
+          <div class="metric-name">Members</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-ring" style="--value: 97%; --ring-color: #d9e1e7;">
+            <span>97</span>
+          </div>
+          <div class="metric-value">97%</div>
+          <div class="metric-name">Success Rate</div>
+        </div>
+      </div>
+
+      <div class="data-strip">
+        <span class="ticker-dot"></span>
+        <span class="ticker">
+          MATCH INTELLIGENCE • FOOTBALL COVERAGE • CRICKET ANALYSIS • COMMUNITY ACCESS • DATA-DRIVEN DISCUSSION •
+        </span>
+      </div>
+    </section>
+
+    <div class="cta-wrap">
+      <a
+        class="access-gate"
+        href="https://t.me/+duRKNv0_-CRjYmI1"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Enter Analyst Viraj Community"
+      >
+        <div class="access-inner">
+          <div class="cta-copy">
+            <span class="cta-small">Secure Community Gateway</span>
+            <span class="cta-main">UNLOCK ANALYST ACCESS</span>
+          </div>
+
+          <div class="cta-icon">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path
+                d="M5 12H19M13 6L19 12L13 18"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+      </a>
+
+      <div class="footer">
+        Ads managed by <span>Mahadev Growth Studio</span>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const sessionTime = document.getElementById("sessionTime");
+    const liveClock = document.getElementById("liveClock");
+
+    function updateClock() {
+      const now = new Date();
+
+      const time = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+
+      const seconds = now.toLocaleTimeString([], {
+        second: "2-digit"
+      });
+
+      sessionTime.textContent = time;
+      liveClock.textContent = "LOCAL " + time + ":" + seconds;
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Subtle mobile touch feedback
+    const cta = document.querySelector(".access-gate");
+
+    cta.addEventListener("touchstart", () => {
+      cta.style.transform = "scale(.975)";
+    }, { passive: true });
+
+    cta.addEventListener("touchend", () => {
+      setTimeout(() => {
+        cta.style.transform = "";
+      }, 120);
+    }, { passive: true });
+
+    // Lightweight entrance state
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.classList.add("loaded");
+    });
+  </script>
+</body>
+</html>
